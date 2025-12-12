@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lucy Marek | IS 201 Site</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">Lucy Marek</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="resume.html">Resume</a></li>
+        <li class="nav-item"><a class="nav-link" href="scratch.html">Scratch</a></li>
+        <li class="nav-item"><a class="nav-link" href="app.html">AI App</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="bg-light py-5">
+  <div class="container">
+    <h1 class="display-6 mb-2">IS 201 Web Project</h1>
+    <p class="lead mb-0">
+      Professional pages, an HTML résumé, a scratch page, an embedded Tableau visualization,
+      and an AI-powered web app.
+    </p>
+  </div>
+</header>
+
+<main class="container my-5">
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5">Professional Résumé</h2>
+          <p class="text-muted">
+            A clean, easy-to-read résumé created entirely in HTML (not a PDF).
+          </p>
+          <a class="btn btn-dark" href="resume.html">View Resume</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5">Scratch Page</h2>
+          <p class="text-muted">
+            A from-scratch HTML page with custom CSS, lists, images, a YouTube video,
+            anchors, and an interactive Tableau visualization.
+          </p>
+          <a class="btn btn-outline-dark" href="scratch.html">Open Scratch Page</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="h5">AI Web App</h2>
+      <p class="text-muted">
+        A number guessing game created with AI assistance and extended with custom logic,
+        difficulty levels, and saved statistics.
+      </p>
+      <a class="btn btn-primary" href="app.html">Launch App</a>
+    </div>
+  </div>
+
+</main>
+
+<footer class="border-top py-4">
+  <div class="container text-muted small">
+    © <span id="year"></span> Lucy Marek • IS 201
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
