@@ -1,0 +1,113 @@
+/* Custom background color + font family + font color requirements */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f6f9;
+  color: #1f2937;
+}
+
+/* Div #1 */
+.topbar {
+  position: sticky;
+  top: 0;
+  background: #111827;
+  padding: 14px 18px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  z-index: 10;
+}
+
+/* Style definition */
+.navlink {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.navlink:hover {
+  text-decoration: underline;
+}
+
+/* Div #2 */
+.container {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+/* Div #3 */
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  margin-bottom: 18px;
+}
+
+/* More style definitions */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 850px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+.subtext {
+  color: #4b5563;
+}
+
+.feature-img {
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.video-wrap {
+  position: relative;
+  padding-top: 56.25%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.video-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tableau-wrap {
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 10px;
+  background: #f8fafc;
+}
+
+.warning {
+  color: #b45309;
+  font-weight: 800;
+}
+
+.anchorlink {
+  color: #2563eb;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.anchorlink:hover {
+  text-decoration: underline;
+}
+
+/* Div #4 (extra) */
+.footer {
+  padding: 24px 16px;
+  text-align: center;
+  color: #6b7280;
+}
