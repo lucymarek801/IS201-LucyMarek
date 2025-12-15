@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Web App | Lucy Marek</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #0b1220;
+      color: #e5e7eb;
+    }
+    .wrap {
+      width: min(900px, 92%);
+      margin: 28px auto 60px auto;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    a { color: #93c5fd; text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+    .card {
+      background: #111a2e;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      margin-bottom: 14px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 780px) { .grid { grid-template-columns: 1fr; } }
+
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    label { font-size: 0.95rem; color: #cbd5e1; }
+    input, select {
+      background: #0b1220;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #e5e7eb;
+      border-radius: 12px;
+      padding: 10px 12px;
+      outline: none;
+    }
+    button {
+      background: #e5e7eb;
+      color: #0b1220;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: transparent;
+      color: #e5e7eb;
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .timer {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .muted { color: #94a3b8; }
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #cbd5e1;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="pill">IS 201 • Single-file web app</div>
+        <h1 style="margin:10px 0 0 0;">Focus Timer + Question Generator</h1>
+        <p class="muted" style="margin:6px 0 0 0;">A practical app: run a timer and generate study prompts.</p>
+      </div>
+      <div class="row">
+        <a href="scratch.html">Back to Scratch</a>
+        <a href="index.html">Professional Site</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2 style="margin-top:0;">Timer</h2>
+        <p class="muted">Choose a session length and hit start.</p>
+
+        <div class="row" style="margin: 10px 0 14px 0;">
+          <label for="minutes">Minutes</label>
+          <input id="minutes" type="number" min="1" max="180" value="25" />
+          <button id="startBtn">Start</button>
+          <button id="pauseBtn" class="secondary" disabled>Pause</button>
+          <button id="resetBtn" class="secondary">Reset</button>
+        </div>
+
+        <div class="timer" id="timerDisplay">25:00</div>
+        <p class="muted" id="statusText">Ready.</p>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0;">Study Question Generator</h2>
+        <p class="muted">Pick a topic, then generate prompts to practice.</p>
+
+        <div class="row" style="margin: 10px 0 14px 0;">
+          <label for="topic">Topic</label>
+          <select id="topic">
+            <option value="IS201">IS 201</option>
+            <option value="Business">Business</option>
+            <option value="Life">Life</option>
+          </select>
+          <button id="genBtn">Generate</button>
+        </div>
+
+        <div id="questionBox" class="card" style="background:#0b1220; border-radius:14px; margin:0;">
+          <div class="muted" style="font-size:0.95rem;">Your prompt will show here.</div>
+          <div id="questionText" style="font-size:1.15rem; font-weight:700; margin-top:8px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Timer ----------
+    const minutesInput = document.getElementById("minutes");
+    const timerDisplay = document.getElementById("timerDisplay");
+    const statusText = document.getElementById("statusText");
+    const startBtn = document.getElementById("startBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let totalSeconds = parseInt(minutesInput.value, 10) * 60;
+    let remaining = totalSeconds;
+    let intervalId = null;
+    let isPaused = false;
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    }
+
+    function setDisplay() {
+      timerDisplay.textContent = formatTime(remaining);
+    }
+
+    function saveSettings() {
+      localStorage.setItem("focus_minutes", minutesInput.value);
+    }
+
+    function loadSettings() {
+      const saved = localStorage.getItem("focus_minutes");
+      if (saved) minutesInput.value = saved;
+      totalSeconds = parseInt(minutesInput.value, 10) * 60;
+      remaining = totalSeconds;
+      setDisplay();
+    }
+
+    function startTimer() {
+      if (intervalId) return;
+      if (remaining <= 0) remaining = parseInt(minutesInput.value, 10) * 60;
+
+      statusText.textContent = "Running.";
+      startBtn.disabled = true;
+      pauseBtn.disabled = false;
+
+      intervalId = setInterval(() => {
+        if (!isPaused) {
+          remaining -= 1;
+          setDisplay();
+          if (remaining <= 0) {
+            clearInterval(intervalId);
+            intervalId = null;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            statusText.textContent = "Done. Reset or start again.";
+            try { navigator.vibrate?.(200); } catch(e) {}
+          }
+        }
+      }, 1000);
+    }
+
+    function togglePause() {
+      isPaused = !isPaused;
+      pauseBtn.textContent = isPaused ? "Resume" : "Pause";
+      statusText.textContent = isPaused ? "Paused." : "Running.";
+    }
+
+    function resetTimer() {
+      clearInterval(intervalId);
+      intervalId = null;
+      isPaused = false;
+      pauseBtn.textContent = "Pause";
+      totalSeconds = parseInt(minutesInput.value, 10) * 60;
+      remaining = totalSeconds;
+      setDisplay();
+      statusText.textContent = "Ready.";
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+    }
+
+    minutesInput.addEventListener("change", () => {
+      const val = Math.max(1, Math.min(180, parseInt(minutesInput.value || "25", 10)));
+      minutesInput.value = val;
+      saveSettings();
+      resetTimer();
+    });
+
+    startBtn.addEventListener("click", startTimer);
+    pauseBtn.addEventListener("click", togglePause);
+    resetBtn.addEventListener("click", resetTimer);
+
+    // ---------- Question Generator ----------
+    const topicSel = document.getElementById("topic");
+    const genBtn = document.getElementById("genBtn");
+    const questionText = document.getElementById("questionText");
+
+    const prompts = {
+      IS201: [
+        "Explain the difference between a professional page and a from-scratch page, and why both matter.",
+        "List the exact scratch page requirements and how you verified each one works.",
+        "What causes broken links/images on GitHub Pages and how do you prevent them?",
+        "Describe what makes a Tableau embed interactive (vs. a screenshot)."
+      ],
+      Business: [
+        "What is one decision you made recently that improved results, and why did it work?",
+        "Explain a time you had to communicate clearly under pressure.",
+        "What’s a skill you’re building and the next concrete step to improve it?"
+      ],
+      Life: [
+        "What habit has the highest ROI for you right now and why?",
+        "What’s one thing you’re avoiding that would actually make your life easier if you handled it?",
+        "What does “professional” mean in a personal project context?"
+      ]
+    };
+
+    function randomFrom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    genBtn.addEventListener("click", () => {
+      const t = topicSel.value;
+      questionText.textContent = randomFrom(prompts[t]);
+      localStorage.setItem("last_topic", t);
+    });
+
+    // init
+    (function init(){
+      loadSettings();
+      const lastTopic = localStorage.getItem("last_topic");
+      if (lastTopic && topicSel.querySelector(`option[value="${lastTopic}"]`)) {
+        topicSel.value = lastTopic;
+      }
+    })();
+  </script>
+</body>
+</html>
